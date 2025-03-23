@@ -1,13 +1,11 @@
 import os
-import asyncio
 from langchain.text_splitter import CharacterTextSplitter
-from langchain_community.document_loaders import PyPDFLoader,TextLoader
+from langchain_community.document_loaders import TextLoader
 from langchain_chroma import Chroma
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain_core.messages import HumanMessage, SystemMessage
 from PyPDF2 import PdfReader
 from dotenv import load_dotenv
-from typing_extensions import Concatenate
 import sys
 
 # Force UTF-8 for printing
@@ -75,7 +73,7 @@ else:
 db = Chroma(persist_directory=persistent_directory,
             embedding_function=embeddings)
 #Define the user's question
-query = "Can you generate some profiling rules for H-1 Schedule"
+query = "Generate data profiling rules for Schedule H-1 to flag the high risk transactions based on regulatory standards. Only provide the rules and do not provide the explanation, Generate atleast 30 rules"
 
 # Retrieve relevant documents based on the query
 retriever = db.as_retriever(

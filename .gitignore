@@ -1,3 +1,4 @@
 .env
 /documents
 /db
+__pycache__/
