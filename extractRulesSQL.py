@@ -21,10 +21,6 @@ def extract_rules_sql():
         json_content = content[start:end]
         try:
             rules_sql = json.loads(json_content)
-            print("JSON content successfully saved as a dictionary!")
-            # print(data_dict)
-            # print(data_dict[0]["rule"])
-            # print(data_dict[0]["query"])
         except json.JSONDecodeError as e:
             print(f"Failed to parse JSON: {e}")
     else:
@@ -39,17 +35,8 @@ def flagTransactions(rulesQueries = []):
 
 
     modified_queries = [query['query'].replace("your_table_name", f"df") for query in rulesQueries]
-    # modified_queries = [query['query'].replace("your_table_name", f"'{csv_file}'") for query in rulesQueries]
-    # queries = [f"""SELECT * FROM '{csv_file}' WHERE ObligorName ILIKE '%Jones%'""", f"""SELECT * FROM '{csv_file}' WHERE ObligorName ILIKE '%Jones%'"""]
-    # print(query)
-    # Run the query and convert the result to a DataFrame
-    # result = duckdb.query(query).to_df()
-    # print("=============================================")
-    # print(modified_queries)
-    # print("=============================================")
     results = []
     rules_linked = []
-    # print(rulesQueries)
     for i in range(len(modified_queries)):
         try:
             res_df = duckdb.query(modified_queries[i]).df()
@@ -57,7 +44,7 @@ def flagTransactions(rulesQueries = []):
                 results.append(res_df)
                 rules_linked.append(rulesQueries[i]["rule"])
         except Exception as e:
-            print(f"Error in query {rulesQueries[i]['query']}: Error: {e}")
+            continue
 
     # Display the result
     return results, rules_linked

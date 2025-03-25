@@ -3,31 +3,19 @@ langchain
 langchain-core
 langchain_community
 
-# OpenAI Integration
-langchain-openai
-openai
-
 # Google Gemini (PaLM) Integration
 langchain-google-genai
 google-generativeai
 
-# Hugging Face Integration
-langchain-huggingface
-transformers
-huggingface-hub
 
 # Environment Variable Management
 python-dotenv
 
-# Machine Learning Utilities
-numpy
-
-#vector-db
-chromadb
-langchain-chroma
-
 #pdf-loader
 pypdf2
-langchain-unstructured
 streamlit
+
+# Data Manipulation
+duckdb
+pandas
 

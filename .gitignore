@@ -1,7 +1,3 @@
 .env
-/documents
-/db
 __pycache__/
-/uploaded_files
-a*.txt
-*.csv
+
