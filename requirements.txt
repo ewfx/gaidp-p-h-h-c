@@ -1,0 +1,21 @@
+# LangChain Core
+langchain
+langchain-core
+langchain_community
+
+# Google Gemini (PaLM) Integration
+langchain-google-genai
+google-generativeai
+
+
+# Environment Variable Management
+python-dotenv
+
+#pdf-loader
+pypdf2
+streamlit
+
+# Data Manipulation
+duckdb
+pandas
+
