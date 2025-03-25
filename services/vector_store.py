@@ -25,6 +25,6 @@ def load_vector_store(persistent_directory, embedding_model):
     embeddings = GoogleGenerativeAIEmbeddings(model=embedding_model)
     return Chroma(persist_directory=persistent_directory, embedding_function=embeddings)
 
-def retrieve_documents(db, query, k=3):
+def retrieve_documents(db, query, k=20):
     retriever = db.as_retriever(search_type="similarity", search_kwargs={"k": k})
     return retriever.invoke(query)

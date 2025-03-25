@@ -73,7 +73,7 @@ else:
 db = Chroma(persist_directory=persistent_directory,
             embedding_function=embeddings)
 #Define the user's question
-query = "Generate data profiling rules for Schedule H-1 to flag the high risk transactions based on regulatory standards. Only provide the rules and do not provide the explanation, Generate atleast 30 rules"
+query = "Generate data profiling rules for Schedule H-1 to flag the high risk transactions based on regulatory standards. Only provide the rules and do not provide the explanation, Generate atleast 30 rules but avoid redundancy"
 
 # Retrieve relevant documents based on the query
 retriever = db.as_retriever(
