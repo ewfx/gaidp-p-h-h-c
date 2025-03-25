@@ -11,9 +11,9 @@ sys.stdout.reconfigure(encoding='utf-8')
 # Load environment variables
 load_dotenv()
 
-if __name__ == "__main__":
+def model():
     # Step 1: Extract PDF text
-    extract_pdf_text(CONFIG["FILE_PATH"], CONFIG["PAGES_TO_LOAD"], CONFIG["OUTPUT_PATH"])
+    extract_pdf_text(CONFIG["COMPLIANCE_DOC_FILE_PATH"], CONFIG["PAGES_TO_LOAD"], CONFIG["OUTPUT_PATH"])
 
     # Step 2: Initialize or load vector store
     if not os.path.exists(CONFIG["PERSISTENT_DIRECTORY"]):
@@ -27,4 +27,8 @@ if __name__ == "__main__":
     relevant_docs = retrieve_documents(db, user_query)
 
     # Step 4: Query the LLM
-    query_llm(CONFIG["LLM_MODEL"], user_query, relevant_docs)
+    results = query_llm(CONFIG["LLM_MODEL"], user_query, relevant_docs)
+    return results.content
+
+
+# print(model())

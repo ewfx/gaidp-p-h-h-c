@@ -21,7 +21,6 @@ python-dotenv
 
 # Machine Learning Utilities
 numpy
-scikit-learn
 
 #vector-db
 chromadb
@@ -30,4 +29,5 @@ langchain-chroma
 #pdf-loader
 pypdf2
 langchain-unstructured
+streamlit
 

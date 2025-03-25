@@ -15,4 +15,5 @@ def query_llm(model_name, query, relevant_docs):
         HumanMessage(content=combined_input),
     ]
     result = llm.invoke(messages)
-    print(result.content)
+    return result
+    # print(result.content)
