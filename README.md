@@ -18,11 +18,9 @@
 In a rapidly evolving financial landscape, ensuring data compliance shouldn't be a bottleneck. Our solution harnesses the power of Generative AI to transform regulatory compliance into an intelligent, automated process. By seamlessly generating data profiling rules, converting them into SQL queries, and flagging non-compliant transactions, we introduce a smarter, faster, and more reliable approach to compliance management.
 
 ## 🎥 Demo
-🔗 [Live Demo](#) (if applicable)  
-📹 [Video Demo](#) (if applicable)  
-🖼️ Screenshots:
+🔗 [Live Demo](https://github.com/ewfx/gaidp-p-h-h-c/blob/main/artifacts/demo/PHHC_Demo_final.mp4)
+📹 [PPT](https://github.com/ewfx/gaidp-p-h-h-c/blob/main/artifacts/demo/gaidp_P-h-h-c.pptx) 
 
-![Screenshot 1](link-to-image)
 
 ## 💡 Innovation Behind It
 Traditional data profiling relies heavily on manual efforts and human judgment, making it error-prone and time-intensive. Our innovative AI-powered platform automates this by understanding complex regulatory instructions and dynamically generating actionable rules. By fusing advanced AI with financial expertise, we eliminate inefficiencies and enhance decision-making for financial institutions.
