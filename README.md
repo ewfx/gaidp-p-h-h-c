@@ -61,7 +61,7 @@ Our Tech Innovation
 3. **Configure Environment:**
     Create a `.env` file with your Gemini API Key:
     ```env
-    GEMINI_API_KEY=<Your_Gemini_API_Key>
+    GEMINI_API_KEY=<Your_Google_API_Key>
     ```
 4. **Launch the App:**
     ```bash
