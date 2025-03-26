@@ -2,7 +2,8 @@
 
 ## 📌 Table of Contents
 - [Introduction](#introduction)
-- [Demo](#demo)
+- [Demo](https://github.com/ewfx/gaidp-p-h-h-c/blob/main/artifacts/demo/PHHC_Demo_final.mp4)
+- [PPT](https://github.com/ewfx/gaidp-p-h-h-c/blob/main/artifacts/demo/gaidp_P-h-h-c.pptx)
 - [Inspiration](#Innovation-Behind-It)
 - [What It Does](#what-it-does)
 - [How We Built It](#how-we-built-it)
