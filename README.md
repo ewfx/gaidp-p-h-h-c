@@ -72,7 +72,7 @@ Our Tech Innovation
     - Reported data (CSV or Excel)
 6. **Generate Insights:**
     - Click "Generate Rules" to create AI-powered profiling rules.
-    - Review SQL queries and execute them.
+    - Review generated rules and execute them.
     - Visualize flagged transactions and rule violations.
 
 ## 🛒 Tech Stack
