@@ -83,6 +83,8 @@ Our Tech Innovation
 
 ## 👥 Team
 - **Prakhar Agrawal** - [GitHub](https://github.com/prakhar2408) | [LinkedIn](https://www.linkedin.com/in/prakhar-agrawal-7388a61b4/)
-- **Teammate 2** - [GitHub](https://github.com/roshanbara) | [LinkedIn](https://www.linkedin.com/in/roshanbara/)
+- **Roshan Prashant Bara** - [GitHub](https://github.com/roshanbara) | [LinkedIn](https://www.linkedin.com/in/roshanbara/)
+- **Srish Aurangabadkar**
+- **Sushma Yaramalla**
 
 Embrace the future of compliance with AI-driven automation. Let’s build a smarter, safer financial ecosystem together!
