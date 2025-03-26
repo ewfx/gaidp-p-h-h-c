@@ -1,0 +1,12 @@
+1. Country code must be 2 characters.
+2. Invalid IndustryCodeType.
+3. Validates the format of the Original Internal Credit Facility ID for disposed credit facilities.
+4. Validates date format is yyyy-mm-dd
+5. Validates date format is yyyy-mm-dd or 9999-01-01 for demand loans.
+6. Other Facility Type description is required if Facility Type is 'Other' (0).
+7. Committed Exposure must be a non-negative integer.
+8. Utilized Exposure must be a non-negative integer.
+9. PastDue must be numeric.
+10. PastDue must be greater than or equal to 0.
+11. NonAccrualDate must be in yyyy-mm-dd format.
+12. ParticipationFlag must be one of [1, 2, 3, 4, 5].

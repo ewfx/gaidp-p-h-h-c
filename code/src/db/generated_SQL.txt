@@ -1,0 +1,526 @@
+```json
+[
+  {
+    "rule": "CustomerID contains invalid characters.",
+    "query": "SELECT * FROM your_table_name WHERE CustomerID LIKE '%[^\\r\\n,\\p{C}]%'"
+  },
+  {
+    "rule": "InternalObligorID contains invalid characters.",
+    "query": "SELECT * FROM your_table_name WHERE InternalObligorID LIKE '%[^\\r\\n,\\p{C}]%'"
+  },
+  {
+    "rule": "OriginalInternalObligorID contains invalid characters.",
+    "query": "SELECT * FROM your_table_name WHERE OriginalInternalObligorID LIKE '%[^\\r\\n,\\p{C}]%'"
+  },
+  {
+    "rule": "ObligorName contains invalid characters.",
+    "query": "SELECT * FROM your_table_name WHERE ObligorName LIKE '%[^\\r\\n,\\p{C}]%'"
+  },
+  {
+    "rule": "Country code must be 2 characters.",
+    "query": "SELECT * FROM your_table_name WHERE LENGTH(Country) != 2"
+  },
+  {
+    "rule": "Invalid Zip Code/Foreign Mailing Code format.",
+    "query": "SELECT * FROM your_table_name WHERE (Country = 'US' AND ZipCodeForeignMailingCode NOT REGEXP '^\\d{5}$') OR (Country != 'US' AND ZipCodeForeignMailingCode NOT REGEXP '^.+')"
+  },
+  {
+    "rule": "IndustryCode must be a 4-6 digit number.",
+    "query": "SELECT * FROM your_table_name WHERE IndustryCode NOT REGEXP '^\\d{4,6}$'"
+  },
+  {
+    "rule": "Invalid IndustryCodeType.",
+    "query": "SELECT * FROM your_table_name WHERE IndustryCodeType NOT IN ('1', '2', '3')"
+  },
+  {
+    "rule": "Invalid TIN format.",
+    "query": "SELECT * FROM your_table_name WHERE TIN NOT REGEXP '^(\\d{2}-\\d{7}|\\d{5} \\d{4}|NA)$'"
+  },
+  {
+    "rule": "Invalid CUSIP format.",
+    "query": "SELECT * FROM your_table_name WHERE CUSIP NOT REGEXP '^([A-Z0-9]{6}|NA)$'"
+  },
+  {
+    "rule": "InternalCreditFacilityID contains invalid characters.",
+    "query": "SELECT * FROM your_table_name WHERE InternalCreditFacilityID LIKE '%[^\\r\\n,\\p{C}]%'"
+  },
+  {
+    "rule": "OriginalInternalID must match InternalObligorID if it's the first submission or there are no changes.",
+    "query": "SELECT * FROM your_table_name WHERE (IsFirstSubmission = TRUE OR NoChangesFromPriorSubmission = TRUE) AND OriginalInternalID != InternalObligorID"
+  },
+  {
+    "rule": "StockExchange must be 'NA' if not publicly traded.",
+    "query": "SELECT * FROM your_table_name WHERE PubliclyTraded = FALSE AND StockExchange != 'NA'"
+  },
+  {
+    "rule": "TKR must be 'NA' if not publicly traded.",
+    "query": "SELECT * FROM your_table_name WHERE PubliclyTraded = FALSE AND TKR != 'NA'"
+  },
+  {
+    "rule": "Validates that the ID does not contain carriage return, line feed, or unprintable characters.",
+    "query": "SELECT * FROM your_table_name WHERE OriginalInternalCreditFacilityID LIKE '%[^\\p{Print}]%'"
+  },
+  {
+    "rule": "Validates the format of the Original Internal Credit Facility ID for disposed credit facilities.",
+    "query": "SELECT * FROM your_table_name WHERE OriginalInternalCreditFacilityID NOT LIKE '%,%'"
+  },
+    {
+    "rule": "Validates date format is yyyy-mm-dd",
+    "query": "SELECT * FROM your_table_name WHERE OriginationDate NOT LIKE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'"
+  },
+  {
+    "rule": "Date must be before or equal to the report period end date.",
+    "query": "SELECT * FROM your_table_name WHERE OriginationDate > @report_period_end_date"
+  },
+  {
+    "rule": "Validates date format is yyyy-mm-dd or 9999-01-01 for demand loans.",
+    "query": "SELECT * FROM your_table_name WHERE MaturityDate NOT LIKE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' AND MaturityDate != '9999-01-01'"
+  },
+  {
+    "rule": "Checks if the facility type code is within the allowed range.",
+    "query": "SELECT * FROM your_table_name WHERE FacilityType < 0 OR FacilityType > 19"
+  },
+    {
+    "rule": "Other Facility Type description is required if Facility Type is 'Other' (0).",
+    "query": "SELECT * FROM your_table_name WHERE FacilityType = 0 AND OtherFacilityType IS NULL"
+  },
+  {
+    "rule": "Checks if the credit facility purpose code is within the allowed range.",
+    "query": "SELECT * FROM your_table_name WHERE CreditFacilityPurpose < 0 OR CreditFacilityPurpose > 21"
+  },
+  {
+    "rule": "Other Credit Facility Purpose description is required if Credit Facility Purpose is 'Other' (0).",
+    "query": "SELECT * FROM your_table_name WHERE CreditFacilityPurpose = 0 AND OtherCreditFacilityPurpose IS NULL"
+  },
+  {
+    "rule": "Other Facility Purpose Description is required if Credit Facility Purpose is 'Other'.",
+    "query": "SELECT * FROM your_table_name WHERE CreditFacilityPurpose = 'Other' AND OtherFacilityPurpose IS NULL"
+  },
+  {
+    "rule": "Committed Exposure must be a non-negative integer.",
+    "query": "SELECT * FROM your_table_name WHERE CommittedExposure < 0 OR CommittedExposure IS NULL or CommittedExposure != CAST(CommittedExposure as INT)"
+
+  },
+  {
+    "rule": "Utilized Exposure must be a non-negative integer.",
+    "query": "SELECT * FROM your_table_name WHERE UtilizedExposure < 0 OR UtilizedExposure IS NULL or UtilizedExposure != CAST(UtilizedExposure as INT)"
+  },
+  {
+    "rule": "Line Reported on FR Y-9C must be one of the allowed integer codes.",
+    "query": "SELECT * FROM your_table_name WHERE LineReportedOnFRY9C NOT IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)"
+  },
+  {
+    "rule": "Line of Business cannot be null.",
+    "query": "SELECT * FROM your_table_name WHERE LineOfBusiness IS NULL"
+  },
+  {
+    "rule": "CumulativeChargeoffs must be numeric.",
+    "query": "SELECT * FROM your_table_name WHERE CAST(CumulativeChargeoffs AS DECIMAL) IS NOT NULL"
+  },
+  {
+    "rule": "CumulativeChargeoffs must be greater than or equal to 0.",
+    "query": "SELECT * FROM your_table_name WHERE CumulativeChargeoffs >= 0"
+  },
+  {
+    "rule": "CumulativeChargeoffs must be 'NA' if loans held for sale or accounted for under a fair value option.",
+    "query": "SELECT * FROM your_table_name WHERE (loans_held_for_sale = TRUE OR fair_value_option = TRUE AND CumulativeChargeoffs = 'NA') OR (loans_held_for_sale = FALSE AND fair_value_option = FALSE)"
+  },
+  {
+    "rule": "PastDue must be numeric.",
+    "query": "SELECT * FROM your_table_name WHERE CAST(PastDue AS DECIMAL) IS NOT NULL"
+  },
+  {
+    "rule": "PastDue must be greater than or equal to 0.",
+    "query": "SELECT * FROM your_table_name WHERE PastDue >= 0"
+  },
+  {
+    "rule": "PastDue must be 0 if fully undrawn commitments.",
+    "query": "SELECT * FROM your_table_name WHERE (fully_undrawn_commitments = TRUE AND PastDue = 0) OR fully_undrawn_commitments = FALSE"
+  },
+  {
+    "rule": "NonAccrualDate must be in yyyy-mm-dd format.",
+    "query": "SELECT * FROM your_table_name WHERE NonAccrualDate LIKE '____-__-__'"
+  },
+  {
+    "rule": "NonAccrualDate must be 9999-12-31 if no non-accrual date or fully undrawn commitments.",
+    "query": "SELECT * FROM your_table_name WHERE (no_non_accrual_date = TRUE OR fully_undrawn_commitments = TRUE AND NonAccrualDate = '9999-12-31') OR (no_non_accrual_date = FALSE AND fully_undrawn_commitments = FALSE)"
+  },
+  {
+    "rule": "ParticipationFlag must be one of [1, 2, 3, 4, 5].",
+    "query": "SELECT * FROM your_table_name WHERE ParticipationFlag IN (1, 2, 3, 4, 5)"
+  },
+  {
+    "rule": "ParticipationFlag must be 1 if fronting exposure.",
+    "query": "SELECT * FROM your_table_name WHERE (fronting_exposure = TRUE AND ParticipationFlag = 1) OR fronting_exposure = FALSE"
+  },
+  {
+    "rule": "LienPosition must be one of [1, 2, 3, 4].",
+    "query": "SELECT * FROM your_table_name WHERE LienPosition IN (1, 2, 3, 4)"
+  },
+  {
+    "rule": "SecurityType must be one of [0, 1, 2, 3, 4, 5, 6].",
+    "query": "SELECT * FROM your_table_name WHERE SecurityType IN (0, 1, 2, 3, 4, 5, 6)"
+  },
+  {
+    "rule": "InterestRateVariability must be one of [1, 2, 3, 4].",
+    "query": "SELECT * FROM your_table_name WHERE InterestRateVariability IN (1, 2, 3, 4)"
+  },
+  {
+    "rule": "InterestRate must be numeric or NA if entirely fee based.",
+    "query": "SELECT * FROM your_table_name WHERE (entirely_fee_based = TRUE AND InterestRate = 'NA') OR (entirely_fee_based = FALSE AND CAST(InterestRate AS DECIMAL) IS NOT NULL)"
+  },
+    {
+    "rule": "InterestRateIndex must be one of [2, 3, 4, 5, 6, 7].",
+    "query": "SELECT * FROM your_table_name WHERE InterestRateIndex IN (2, 3, 4, 5, 6, 7)"
+  },
+  {
+    "rule": "InterestRateSpread must be decimal.",
+    "query": "SELECT * FROM your_table_name WHERE CAST(InterestRateSpread AS DECIMAL) IS NOT NULL"
+  },
+  {
+    "rule": "InterestRateSpread can be 'NA'.",
+    "query": "SELECT * FROM your_table_name WHERE InterestRateSpread = 'NA' OR CAST(InterestRateSpread AS DECIMAL) IS NOT NULL"
+  },
+    {
+    "rule": "InterestRateCeiling must be decimal.",
+    "query": "SELECT * FROM your_table_name WHERE CAST(InterestRateCeiling AS DECIMAL) IS NOT NULL"
+  },
+    {
+    "rule": "InterestRateCeiling can be 'NA' or 'NONE'.",
+    "query": "SELECT * FROM your_table_name WHERE InterestRateCeiling IN ('NA', 'NONE') OR CAST(InterestRateCeiling AS DECIMAL) IS NOT NULL"
+  },
+  {
+    "rule": "InterestRateFloor must be decimal.",
+    "query": "SELECT * FROM your_table_name WHERE CAST(InterestRateFloor AS DECIMAL) IS NOT NULL"
+  },
+  {
+    "rule": "InterestRateFloor can be 'NA' or 'NONE'.",
+    "query": "SELECT * FROM your_table_name WHERE InterestRateFloor IN ('NA', 'NONE') OR CAST(InterestRateFloor AS DECIMAL) IS NOT NULL"
+  },
+  {
+    "rule": "TaxStatus must be one of [1, 2].",
+    "query": "SELECT * FROM your_table_name WHERE TaxStatus IN (1, 2)"
+  },
+  {
+    "rule": "GuarantorFlag must be one of [1, 2, 3, 4].",
+    "query": "SELECT * FROM your_table_name WHERE GuarantorFlag IN (1, 2, 3, 4)"
+  },
+  {
+    "rule": "GuarantorInternalID can be null if GuarantorFlag is 4.",
+    "query": "SELECT * FROM your_table_name WHERE (GuarantorFlag = 4 AND GuarantorInternalID = 'NA') OR GuarantorFlag != 4"
+  },
+    {
+    "rule": "GuarantorInternalID must match the specified string pattern.",
+    "query": "SELECT * FROM your_table_name WHERE GuarantorInternalID LIKE '%[^,\\n\\r\\x00-\\x1F]%'"
+  },
+    {
+    "rule": "GuarantorName can be null if GuarantorFlag is 4.",
+    "query": "SELECT * FROM your_table_name WHERE (GuarantorFlag = 4 AND GuarantorName = 'NA') OR GuarantorFlag != 4"
+  },
+    {
+    "rule": "GuarantorName must match the specified string pattern.",
+    "query": "SELECT * FROM your_table_name WHERE GuarantorName LIKE '%[^,\\n\\r\\x00-\\x1F]%'"
+
+  },
+  {
+    "rule": "GuarantorTIN can be null if GuarantorFlag is 4.",
+    "query": "SELECT * FROM your_table_name WHERE (GuarantorFlag = 4 AND GuarantorTIN = 'NA') OR GuarantorFlag != 4"
+  },
+  {
+    "rule": "GuarantorTIN must match the specified string pattern.",
+    "query": "SELECT * FROM your_table_name WHERE GuarantorTIN LIKE '(\\d{2}-\\d{7}|\\d{6} \\d{3}|NA)'"
+  },
+  {
+    "rule": "Valid Guarantor Internal Risk Rating",
+    "query": "SELECT * FROM your_table_name WHERE \"Guarantor Internal Risk Rating\" IS NULL OR \"Guarantor Internal Risk Rating\" ~ '^([A-Za-z0-9\\s]*|NA)$'"
+  },
+  {
+    "rule": "Valid Entity Internal ID",
+    "query": "SELECT * FROM your_table_name WHERE \"Entity Internal ID\" IS NULL OR \"Entity Internal ID\" !~ '[\\r\\n,\\x00-\\x1F]'"
+  },
+  {
+    "rule": "Valid Entity Name",
+    "query": "SELECT * FROM your_table_name WHERE \"Entity Name\" IS NULL OR \"Entity Name\" ~ '^([^\\r\\n,\\x00-\\x1F]*|Individual)$'"
+  },
+  {
+    "rule": "Valid Entity Internal Risk Rating",
+    "query": "SELECT * FROM your_table_name WHERE \"Entity Internal Risk Rating\" IS NULL OR \"Entity Internal Risk Rating\" ~ '^[A-Za-z0-9\\s]*$'"
+  },
+  {
+    "rule": "Valid Date Format (YYYY-MM-DD) for Date of Financials",
+    "query": "SELECT * FROM your_table_name WHERE \"Date of Financials\" IS NULL OR \"Date of Financials\" ~ '^\\d{4}-\\d{2}-\\d{2}$'"
+  },
+  {
+    "rule": "Valid Date Format (YYYY-MM-DD) for Date of Last Audit",
+    "query": "SELECT * FROM your_table_name WHERE \"Date of Last Audit\" IS NULL OR \"Date of Last Audit\" ~ '^\\d{4}-\\d{2}-\\d{2}$'"
+  },
+  {
+    "rule": "Valid Date of Last Audit or No Audit",
+    "query": "SELECT * FROM your_table_name WHERE \"Date of Last Audit\" IS NULL OR \"Date of Last Audit\" = '9999-12-31'"
+  },
+  {
+    "rule": "Valid Integer Amount for Net Sales Current",
+    "query": "SELECT * FROM your_table_name WHERE \"Net Sales Current\" IS NULL OR \"Net Sales Current\" ~ '^\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount for Net Sales Prior Year",
+    "query": "SELECT * FROM your_table_name WHERE \"Net Sales Prior Year\" IS NULL OR \"Net Sales Prior Year\" ~ '^\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount (Positive or Negative) for Operating Income",
+    "query": "SELECT * FROM your_table_name WHERE \"Operating Income\" IS NULL OR \"Operating Income\" ~ '^-?\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount for Depreciation & Amortization",
+    "query": "SELECT * FROM your_table_name WHERE \"Depreciation & Amortization\" IS NULL OR \"Depreciation & Amortization\" ~ '^\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount for Interest Expense",
+    "query": "SELECT * FROM your_table_name WHERE \"Interest Expense\" IS NULL OR \"Interest Expense\" ~ '^\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount (Positive or Negative) for Net Income Current",
+    "query": "SELECT * FROM your_table_name WHERE \"Net Income Current\" IS NULL OR \"Net Income Current\" ~ '^-?\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount (Positive or Negative) for Net Income Prior Year",
+    "query": "SELECT * FROM your_table_name WHERE \"Net Income Prior Year\" IS NULL OR \"Net Income Prior Year\" ~ '^-?\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount for Cash & Marketable Securities",
+    "query": "SELECT * FROM your_table_name WHERE \"Cash & Marketable Securities\" IS NULL OR \"Cash & Marketable Securities\" ~ '^\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount for Accounts Receivable (A/R) Current",
+    "query": "SELECT * FROM your_table_name WHERE \"Accounts Receivable (A/R) Current\" IS NULL OR \"Accounts Receivable (A/R) Current\" ~ '^\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount for Accounts Receivable (A/R) Prior Year",
+    "query": "SELECT * FROM your_table_name WHERE \"Accounts Receivable (A/R) Prior Year\" IS NULL OR \"Accounts Receivable (A/R) Prior Year\" ~ '^\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount for Inventory Current",
+    "query": "SELECT * FROM your_table_name WHERE \"Inventory Current\" IS NULL OR \"Inventory Current\" ~ '^\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount for Inventory Prior Year",
+    "query": "SELECT * FROM your_table_name WHERE \"Inventory Prior Year\" IS NULL OR \"Inventory Prior Year\" ~ '^\\d+$'"
+  },
+  {
+    "rule": "Valid Integer Amount for Current Assets Current",
+    "query": "SELECT * FROM your_table_name WHERE \"Current Assets Current\" IS NULL OR \"Current Assets Current\" ~ '^\\d+$'"
+  },
+    {
+    "rule": "CurrentAssetsPriorYear Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"CurrentAssetsPriorYear\" IS NULL OR typeof(\"CurrentAssetsPriorYear\") = 'integer' OR typeof(\"CurrentAssetsPriorYear\") = 'real'"
+  },
+  {
+    "rule": "CurrentAssetsPriorYear Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"CurrentAssetsPriorYear\" IS NOT NULL"
+  },
+    {
+    "rule": "TangibleAssets Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"TangibleAssets\" IS NULL OR typeof(\"TangibleAssets\") = 'integer' OR typeof(\"TangibleAssets\") = 'real'"
+  },
+  {
+    "rule": "TangibleAssets Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"TangibleAssets\" IS NOT NULL"
+  },
+  {
+    "rule": "FixedAssets Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"FixedAssets\" IS NULL OR typeof(\"FixedAssets\") = 'integer' OR typeof(\"FixedAssets\") = 'real'"
+  },
+  {
+    "rule": "FixedAssets Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"FixedAssets\" IS NOT NULL"
+  },
+  {
+    "rule": "TotalAssetsCurrent Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"TotalAssetsCurrent\" IS NULL OR typeof(\"TotalAssetsCurrent\") = 'integer' OR typeof(\"TotalAssetsCurrent\") = 'real'"
+  },
+  {
+    "rule": "TotalAssetsCurrent Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"TotalAssetsCurrent\" IS NOT NULL"
+  },
+  {
+    "rule": "TotalAssetsPriorYear Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"TotalAssetsPriorYear\" IS NULL OR typeof(\"TotalAssetsPriorYear\") = 'integer' OR typeof(\"TotalAssetsPriorYear\") = 'real'"
+  },
+  {
+    "rule": "TotalAssetsPriorYear Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"TotalAssetsPriorYear\" IS NOT NULL"
+  },
+  {
+    "rule": "AccountsPayableCurrent Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"AccountsPayableCurrent\" IS NULL OR typeof(\"AccountsPayableCurrent\") = 'integer' OR typeof(\"AccountsPayableCurrent\") = 'real'"
+  },
+  {
+    "rule": "AccountsPayableCurrent Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"AccountsPayableCurrent\" IS NOT NULL"
+  },
+  {
+    "rule": "AccountsPayablePriorYear Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"AccountsPayablePriorYear\" IS NULL OR typeof(\"AccountsPayablePriorYear\") = 'integer' OR typeof(\"AccountsPayablePriorYear\") = 'real'"
+  },
+  {
+    "rule": "AccountsPayablePriorYear Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"AccountsPayablePriorYear\" IS NOT NULL"
+  },
+  {
+    "rule": "ShortTermDebt Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"ShortTermDebt\" IS NULL OR typeof(\"ShortTermDebt\") = 'integer' OR typeof(\"ShortTermDebt\") = 'real'"
+  },
+  {
+    "rule": "ShortTermDebt Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"ShortTermDebt\" IS NOT NULL"
+  },
+  {
+    "rule": "CurrentMaturitiesLongTermDebt Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"CurrentMaturitiesLongTermDebt\" IS NULL OR typeof(\"CurrentMaturitiesLongTermDebt\") = 'integer' OR typeof(\"CurrentMaturitiesLongTermDebt\") = 'real'"
+  },
+  {
+    "rule": "CurrentMaturitiesLongTermDebt Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"CurrentMaturitiesLongTermDebt\" IS NOT NULL"
+  },
+  {
+    "rule": "CurrentLiabilitiesCurrent Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"CurrentLiabilitiesCurrent\" IS NULL OR typeof(\"CurrentLiabilitiesCurrent\") = 'integer' OR typeof(\"CurrentLiabilitiesCurrent\") = 'real'"
+  },
+  {
+    "rule": "CurrentLiabilitiesCurrent Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"CurrentLiabilitiesCurrent\" IS NOT NULL"
+  },
+  {
+    "rule": "CurrentLiabilitiesPriorYear Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"CurrentLiabilitiesPriorYear\" IS NULL OR typeof(\"CurrentLiabilitiesPriorYear\") = 'integer' OR typeof(\"CurrentLiabilitiesPriorYear\") = 'real'"
+  },
+  {
+    "rule": "CurrentLiabilitiesPriorYear Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"CurrentLiabilitiesPriorYear\" IS NOT NULL"
+  },
+  {
+    "rule": "LongTermDebt Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"LongTermDebt\" IS NULL OR typeof(\"LongTermDebt\") = 'integer' OR typeof(\"LongTermDebt\") = 'real'"
+  },
+  {
+    "rule": "LongTermDebt Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"LongTermDebt\" IS NOT NULL"
+  },
+  {
+    "rule": "MinorityInterest Must be numeric or 'NA'",
+    "query": "SELECT * FROM your_table_name WHERE \"MinorityInterest\" IS NULL OR \"MinorityInterest\" = 'NA' OR typeof(\"MinorityInterest\") = 'integer' OR typeof(\"MinorityInterest\") = 'real'"
+  },
+  {
+    "rule": "MinorityInterest Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"MinorityInterest\" IS NOT NULL"
+  },
+  {
+    "rule": "TotalLiabilities Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"TotalLiabilities\" IS NULL OR typeof(\"TotalLiabilities\") = 'integer' OR typeof(\"TotalLiabilities\") = 'real'"
+  },
+  {
+    "rule": "TotalLiabilities Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"TotalLiabilities\" IS NOT NULL"
+  },  {
+    "rule": "RetainedEarnings Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"RetainedEarnings\" IS NULL OR typeof(\"RetainedEarnings\") = 'integer' OR typeof(\"RetainedEarnings\") = 'real'"
+  },
+  {
+    "rule": "RetainedEarnings Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"RetainedEarnings\" IS NOT NULL"
+  },
+  {
+    "rule": "CapitalExpenditures Must be numeric",
+    "query": "SELECT * FROM your_table_name WHERE \"CapitalExpenditures\" IS NULL OR typeof(\"CapitalExpenditures\") = 'integer' OR typeof(\"CapitalExpenditures\") = 'real'"
+  },
+  {
+    "rule": "CapitalExpenditures Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"CapitalExpenditures\" IS NOT NULL"
+  },
+  {
+    "rule": "SpecialPurposeEntityFlag Must be '1' or '2'",
+    "query": "SELECT * FROM your_table_name WHERE \"SpecialPurposeEntityFlag\" IS NULL OR \"SpecialPurposeEntityFlag\" IN ('1', '2')"
+  },
+  {
+    "rule": "SpecialPurposeEntityFlag Must not be null",
+    "query": "SELECT * FROM your_table_name WHERE \"SpecialPurposeEntityFlag\" IS NOT NULL"
+  },
+  {
+    "rule": "ASC32620 must be numeric.",
+    "query": "SELECT * FROM your_table_name WHERE CAST(ASC32620 AS DECIMAL) IS NOT NULL;"
+  },
+  {
+    "rule": "ASC32620 must be greater than or equal to 0.",
+    "query": "SELECT * FROM your_table_name WHERE CAST(ASC32620 AS DECIMAL) >= 0;"
+  },
+  {
+    "rule": "PCDNoncreditDiscount must be numeric or null.",
+    "query": "SELECT * FROM your_table_name WHERE PCDNoncreditDiscount IS NULL OR CAST(PCDNoncreditDiscount AS DECIMAL) IS NOT NULL;"
+  },
+  {
+    "rule": "CurrentMaturityDate must be in YYYY-MM-DD format.",
+    "query": "SELECT * FROM your_table_name WHERE CurrentMaturityDate LIKE '____-__-__';"
+  },
+  {
+    "rule": "CurrentMaturityDate must be one of the allowed values: [\"9999-01-01\"].",
+    "query": "SELECT * FROM your_table_name WHERE CurrentMaturityDate IN ('9999-01-01');"
+  },
+  {
+    "rule": "CommittedExposureGlobalParValue must be numeric or string.",
+    "query": "SELECT * FROM your_table_name WHERE CommittedExposureGlobalParValue IS NOT NULL;"
+  },
+  {
+    "rule": "CommittedExposureGlobalParValue must be one of the allowed values: [\"NA\"].",
+    "query": "SELECT * FROM your_table_name WHERE CommittedExposureGlobalParValue IN ('NA');"
+  },
+    {
+    "rule": "UtilizedExposureGlobalParValue must be numeric or string.",
+    "query": "SELECT * FROM your_table_name WHERE UtilizedExposureGlobalParValue IS NOT NULL;"
+  },
+  {
+    "rule": "UtilizedExposureGlobalParValue must be one of the allowed values: [\"NA\"].",
+    "query": "SELECT * FROM your_table_name WHERE UtilizedExposureGlobalParValue IN ('NA');"
+  },
+ {
+    "rule": "CommittedExposureGlobalFairValue must be numeric or string.",
+    "query": "SELECT * FROM your_table_name WHERE CommittedExposureGlobalFairValue IS NOT NULL;"
+  },
+  {
+    "rule": "CommittedExposureGlobalFairValue must be one of the allowed values: [\"NA\"].",
+    "query": "SELECT * FROM your_table_name WHERE CommittedExposureGlobalFairValue IN ('NA');"
+  },
+  {
+    "rule": "Utilized Exposure Global Fair Value must be numeric or 'NA'.",
+    "query": "SELECT * FROM your_table_name WHERE `Utilized Exposure Global Fair Value` = 'NA' OR CAST(`Utilized Exposure Global Fair Value` AS DECIMAL) IS NOT NULL;"
+  },
+  {
+    "rule": "Utilized Exposure Global Fair Value, if numeric, must be greater than or equal to 0.",
+    "query": "SELECT * FROM your_table_name WHERE `Utilized Exposure Global Fair Value` = 'NA' OR CAST(`Utilized Exposure Global Fair Value` AS DECIMAL) >= 0;"
+  },
+  {
+    "rule": "Utilized Exposure Global Fair Value, if numeric, must have no commas, dollar signs, or decimals.",
+    "query": "SELECT * FROM your_table_name WHERE `Utilized Exposure Global Fair Value` = 'NA' OR `Utilized Exposure Global Fair Value` NOT LIKE '%,%' AND `Utilized Exposure Global Fair Value` NOT LIKE '%$.%' AND `Utilized Exposure Global Fair Value` NOT LIKE '%.%';"
+  },
+  {
+    "rule": "Obligor LEI must have a length of 20 or be 'NA'.",
+    "query": "SELECT * FROM your_table_name WHERE LENGTH(`Obligor LEI`) = 20 OR `Obligor LEI` = 'NA';"
+  },
+  {
+    "rule": "Obligor LEI must be alphanumeric or 'NA'.",
+    "query": "SELECT * FROM your_table_name WHERE (`Obligor LEI` = 'NA' OR `Obligor LEI` NOT LIKE '%[^a-zA-Z0-9]%');"
+  },
+  {
+    "rule": "Primary Source of Repayment LEI must have a length of 20 or be 'NA'.",
+    "query": "SELECT * FROM your_table_name WHERE LENGTH(`Primary Source of Repayment LEI`) = 20 OR `Primary Source of Repayment LEI` = 'NA';"
+  },
+  {
+    "rule": "Primary Source of Repayment LEI must be alphanumeric or 'NA'.",
+    "query": "SELECT * FROM your_table_name WHERE (`Primary Source of Repayment LEI` = 'NA' OR `Primary Source of Repayment LEI` NOT LIKE '%[^a-zA-Z0-9]%');"
+
+  },
+  {
+    "rule": "Primary Source of Repayment LEI cannot be empty if Obligor LEI is not 'NA'.",
+    "query": "SELECT * FROM your_table_name WHERE NOT (`Obligor LEI` != 'NA' AND `Primary Source of Repayment LEI` IS NULL);"
+  }
+]
+```

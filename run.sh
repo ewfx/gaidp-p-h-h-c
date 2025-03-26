@@ -2,4 +2,4 @@
 pip install -r requirements.txt
 
 # Run the Streamlit app
-streamlit run app.py
+streamlit run code/src/app.py

@@ -1,0 +1,390 @@
+1. CustomerID contains invalid characters.
+SELECT * FROM your_table_name WHERE CustomerID LIKE '%[^\r\n,\p{C}]%'
+
+2. InternalObligorID contains invalid characters.
+SELECT * FROM your_table_name WHERE InternalObligorID LIKE '%[^\r\n,\p{C}]%'
+
+3. OriginalInternalObligorID contains invalid characters.
+SELECT * FROM your_table_name WHERE OriginalInternalObligorID LIKE '%[^\r\n,\p{C}]%'
+
+4. ObligorName contains invalid characters.
+SELECT * FROM your_table_name WHERE ObligorName LIKE '%[^\r\n,\p{C}]%'
+
+5. Country code must be 2 characters.
+SELECT * FROM your_table_name WHERE LENGTH(Country) != 2
+
+6. Invalid Zip Code/Foreign Mailing Code format.
+SELECT * FROM your_table_name WHERE (Country = 'US' AND ZipCodeForeignMailingCode NOT REGEXP '^\d{5}$') OR (Country != 'US' AND ZipCodeForeignMailingCode NOT REGEXP '^.+')
+
+7. IndustryCode must be a 4-6 digit number.
+SELECT * FROM your_table_name WHERE IndustryCode NOT REGEXP '^\d{4,6}$'
+
+8. Invalid IndustryCodeType.
+SELECT * FROM your_table_name WHERE IndustryCodeType NOT IN ('1', '2', '3')
+
+9. Invalid TIN format.
+SELECT * FROM your_table_name WHERE TIN NOT REGEXP '^(\d{2}-\d{7}|\d{5} \d{4}|NA)$'
+
+10. Invalid CUSIP format.
+SELECT * FROM your_table_name WHERE CUSIP NOT REGEXP '^([A-Z0-9]{6}|NA)$'
+
+11. InternalCreditFacilityID contains invalid characters.
+SELECT * FROM your_table_name WHERE InternalCreditFacilityID LIKE '%[^\r\n,\p{C}]%'
+
+12. OriginalInternalID must match InternalObligorID if it's the first submission or there are no changes.
+SELECT * FROM your_table_name WHERE (IsFirstSubmission = TRUE OR NoChangesFromPriorSubmission = TRUE) AND OriginalInternalID != InternalObligorID
+
+13. StockExchange must be 'NA' if not publicly traded.
+SELECT * FROM your_table_name WHERE PubliclyTraded = FALSE AND StockExchange != 'NA'
+
+14. TKR must be 'NA' if not publicly traded.
+SELECT * FROM your_table_name WHERE PubliclyTraded = FALSE AND TKR != 'NA'
+
+15. Validates that the ID does not contain carriage return, line feed, or unprintable characters.
+SELECT * FROM your_table_name WHERE OriginalInternalCreditFacilityID LIKE '%[^\p{Print}]%'
+
+16. Validates the format of the Original Internal Credit Facility ID for disposed credit facilities.
+SELECT * FROM your_table_name WHERE OriginalInternalCreditFacilityID NOT LIKE '%,%'
+
+17. Validates date format is yyyy-mm-dd
+SELECT * FROM your_table_name WHERE OriginationDate NOT LIKE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'
+
+18. Date must be before or equal to the report period end date.
+SELECT * FROM your_table_name WHERE OriginationDate > @report_period_end_date
+
+19. Validates date format is yyyy-mm-dd or 9999-01-01 for demand loans.
+SELECT * FROM your_table_name WHERE MaturityDate NOT LIKE '^[0-9]{4}-[0-9]{2}-[0-9]{2}$' AND MaturityDate != '9999-01-01'
+
+20. Checks if the facility type code is within the allowed range.
+SELECT * FROM your_table_name WHERE FacilityType < 0 OR FacilityType > 19
+
+21. Other Facility Type description is required if Facility Type is 'Other' (0).
+SELECT * FROM your_table_name WHERE FacilityType = 0 AND OtherFacilityType IS NULL
+
+22. Checks if the credit facility purpose code is within the allowed range.
+SELECT * FROM your_table_name WHERE CreditFacilityPurpose < 0 OR CreditFacilityPurpose > 21
+
+23. Other Credit Facility Purpose description is required if Credit Facility Purpose is 'Other' (0).
+SELECT * FROM your_table_name WHERE CreditFacilityPurpose = 0 AND OtherCreditFacilityPurpose IS NULL
+
+24. Other Facility Purpose Description is required if Credit Facility Purpose is 'Other'.
+SELECT * FROM your_table_name WHERE CreditFacilityPurpose = 'Other' AND OtherFacilityPurpose IS NULL
+
+25. Committed Exposure must be a non-negative integer.
+SELECT * FROM your_table_name WHERE CommittedExposure < 0 OR CommittedExposure IS NULL or CommittedExposure != CAST(CommittedExposure as INT)
+
+26. Utilized Exposure must be a non-negative integer.
+SELECT * FROM your_table_name WHERE UtilizedExposure < 0 OR UtilizedExposure IS NULL or UtilizedExposure != CAST(UtilizedExposure as INT)
+
+27. Line Reported on FR Y-9C must be one of the allowed integer codes.
+SELECT * FROM your_table_name WHERE LineReportedOnFRY9C NOT IN (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11)
+
+28. Line of Business cannot be null.
+SELECT * FROM your_table_name WHERE LineOfBusiness IS NULL
+
+29. CumulativeChargeoffs must be numeric.
+SELECT * FROM your_table_name WHERE CAST(CumulativeChargeoffs AS DECIMAL) IS NOT NULL
+
+30. CumulativeChargeoffs must be greater than or equal to 0.
+SELECT * FROM your_table_name WHERE CumulativeChargeoffs >= 0
+
+31. CumulativeChargeoffs must be 'NA' if loans held for sale or accounted for under a fair value option.
+SELECT * FROM your_table_name WHERE (loans_held_for_sale = TRUE OR fair_value_option = TRUE AND CumulativeChargeoffs = 'NA') OR (loans_held_for_sale = FALSE AND fair_value_option = FALSE)
+
+32. PastDue must be numeric.
+SELECT * FROM your_table_name WHERE CAST(PastDue AS DECIMAL) IS NOT NULL
+
+33. PastDue must be greater than or equal to 0.
+SELECT * FROM your_table_name WHERE PastDue >= 0
+
+34. PastDue must be 0 if fully undrawn commitments.
+SELECT * FROM your_table_name WHERE (fully_undrawn_commitments = TRUE AND PastDue = 0) OR fully_undrawn_commitments = FALSE
+
+35. NonAccrualDate must be in yyyy-mm-dd format.
+SELECT * FROM your_table_name WHERE NonAccrualDate LIKE '____-__-__'
+
+36. NonAccrualDate must be 9999-12-31 if no non-accrual date or fully undrawn commitments.
+SELECT * FROM your_table_name WHERE (no_non_accrual_date = TRUE OR fully_undrawn_commitments = TRUE AND NonAccrualDate = '9999-12-31') OR (no_non_accrual_date = FALSE AND fully_undrawn_commitments = FALSE)
+
+37. ParticipationFlag must be one of [1, 2, 3, 4, 5].
+SELECT * FROM your_table_name WHERE ParticipationFlag IN (1, 2, 3, 4, 5)
+
+38. ParticipationFlag must be 1 if fronting exposure.
+SELECT * FROM your_table_name WHERE (fronting_exposure = TRUE AND ParticipationFlag = 1) OR fronting_exposure = FALSE
+
+39. LienPosition must be one of [1, 2, 3, 4].
+SELECT * FROM your_table_name WHERE LienPosition IN (1, 2, 3, 4)
+
+40. SecurityType must be one of [0, 1, 2, 3, 4, 5, 6].
+SELECT * FROM your_table_name WHERE SecurityType IN (0, 1, 2, 3, 4, 5, 6)
+
+41. InterestRateVariability must be one of [1, 2, 3, 4].
+SELECT * FROM your_table_name WHERE InterestRateVariability IN (1, 2, 3, 4)
+
+42. InterestRate must be numeric or NA if entirely fee based.
+SELECT * FROM your_table_name WHERE (entirely_fee_based = TRUE AND InterestRate = 'NA') OR (entirely_fee_based = FALSE AND CAST(InterestRate AS DECIMAL) IS NOT NULL)
+
+43. InterestRateIndex must be one of [2, 3, 4, 5, 6, 7].
+SELECT * FROM your_table_name WHERE InterestRateIndex IN (2, 3, 4, 5, 6, 7)
+
+44. InterestRateSpread must be decimal.
+SELECT * FROM your_table_name WHERE CAST(InterestRateSpread AS DECIMAL) IS NOT NULL
+
+45. InterestRateSpread can be 'NA'.
+SELECT * FROM your_table_name WHERE InterestRateSpread = 'NA' OR CAST(InterestRateSpread AS DECIMAL) IS NOT NULL
+
+46. InterestRateCeiling must be decimal.
+SELECT * FROM your_table_name WHERE CAST(InterestRateCeiling AS DECIMAL) IS NOT NULL
+
+47. InterestRateCeiling can be 'NA' or 'NONE'.
+SELECT * FROM your_table_name WHERE InterestRateCeiling IN ('NA', 'NONE') OR CAST(InterestRateCeiling AS DECIMAL) IS NOT NULL
+
+48. InterestRateFloor must be decimal.
+SELECT * FROM your_table_name WHERE CAST(InterestRateFloor AS DECIMAL) IS NOT NULL
+
+49. InterestRateFloor can be 'NA' or 'NONE'.
+SELECT * FROM your_table_name WHERE InterestRateFloor IN ('NA', 'NONE') OR CAST(InterestRateFloor AS DECIMAL) IS NOT NULL
+
+50. TaxStatus must be one of [1, 2].
+SELECT * FROM your_table_name WHERE TaxStatus IN (1, 2)
+
+51. GuarantorFlag must be one of [1, 2, 3, 4].
+SELECT * FROM your_table_name WHERE GuarantorFlag IN (1, 2, 3, 4)
+
+52. GuarantorInternalID can be null if GuarantorFlag is 4.
+SELECT * FROM your_table_name WHERE (GuarantorFlag = 4 AND GuarantorInternalID = 'NA') OR GuarantorFlag != 4
+
+53. GuarantorInternalID must match the specified string pattern.
+SELECT * FROM your_table_name WHERE GuarantorInternalID LIKE '%[^,\n\r\x00-\x1F]%'
+
+54. GuarantorName can be null if GuarantorFlag is 4.
+SELECT * FROM your_table_name WHERE (GuarantorFlag = 4 AND GuarantorName = 'NA') OR GuarantorFlag != 4
+
+55. GuarantorName must match the specified string pattern.
+SELECT * FROM your_table_name WHERE GuarantorName LIKE '%[^,\n\r\x00-\x1F]%'
+
+56. GuarantorTIN can be null if GuarantorFlag is 4.
+SELECT * FROM your_table_name WHERE (GuarantorFlag = 4 AND GuarantorTIN = 'NA') OR GuarantorFlag != 4
+
+57. GuarantorTIN must match the specified string pattern.
+SELECT * FROM your_table_name WHERE GuarantorTIN LIKE '(\d{2}-\d{7}|\d{6} \d{3}|NA)'
+
+58. Valid Guarantor Internal Risk Rating
+SELECT * FROM your_table_name WHERE "Guarantor Internal Risk Rating" IS NULL OR "Guarantor Internal Risk Rating" ~ '^([A-Za-z0-9\s]*|NA)$'
+
+59. Valid Entity Internal ID
+SELECT * FROM your_table_name WHERE "Entity Internal ID" IS NULL OR "Entity Internal ID" !~ '[\r\n,\x00-\x1F]'
+
+60. Valid Entity Name
+SELECT * FROM your_table_name WHERE "Entity Name" IS NULL OR "Entity Name" ~ '^([^\r\n,\x00-\x1F]*|Individual)$'
+
+61. Valid Entity Internal Risk Rating
+SELECT * FROM your_table_name WHERE "Entity Internal Risk Rating" IS NULL OR "Entity Internal Risk Rating" ~ '^[A-Za-z0-9\s]*$'
+
+62. Valid Date Format (YYYY-MM-DD) for Date of Financials
+SELECT * FROM your_table_name WHERE "Date of Financials" IS NULL OR "Date of Financials" ~ '^\d{4}-\d{2}-\d{2}$'
+
+63. Valid Date Format (YYYY-MM-DD) for Date of Last Audit
+SELECT * FROM your_table_name WHERE "Date of Last Audit" IS NULL OR "Date of Last Audit" ~ '^\d{4}-\d{2}-\d{2}$'
+
+64. Valid Date of Last Audit or No Audit
+SELECT * FROM your_table_name WHERE "Date of Last Audit" IS NULL OR "Date of Last Audit" = '9999-12-31'
+
+65. Valid Integer Amount for Net Sales Current
+SELECT * FROM your_table_name WHERE "Net Sales Current" IS NULL OR "Net Sales Current" ~ '^\d+$'
+
+66. Valid Integer Amount for Net Sales Prior Year
+SELECT * FROM your_table_name WHERE "Net Sales Prior Year" IS NULL OR "Net Sales Prior Year" ~ '^\d+$'
+
+67. Valid Integer Amount (Positive or Negative) for Operating Income
+SELECT * FROM your_table_name WHERE "Operating Income" IS NULL OR "Operating Income" ~ '^-?\d+$'
+
+68. Valid Integer Amount for Depreciation & Amortization
+SELECT * FROM your_table_name WHERE "Depreciation & Amortization" IS NULL OR "Depreciation & Amortization" ~ '^\d+$'
+
+69. Valid Integer Amount for Interest Expense
+SELECT * FROM your_table_name WHERE "Interest Expense" IS NULL OR "Interest Expense" ~ '^\d+$'
+
+70. Valid Integer Amount (Positive or Negative) for Net Income Current
+SELECT * FROM your_table_name WHERE "Net Income Current" IS NULL OR "Net Income Current" ~ '^-?\d+$'
+
+71. Valid Integer Amount (Positive or Negative) for Net Income Prior Year
+SELECT * FROM your_table_name WHERE "Net Income Prior Year" IS NULL OR "Net Income Prior Year" ~ '^-?\d+$'
+
+72. Valid Integer Amount for Cash & Marketable Securities
+SELECT * FROM your_table_name WHERE "Cash & Marketable Securities" IS NULL OR "Cash & Marketable Securities" ~ '^\d+$'
+
+73. Valid Integer Amount for Accounts Receivable (A/R) Current
+SELECT * FROM your_table_name WHERE "Accounts Receivable (A/R) Current" IS NULL OR "Accounts Receivable (A/R) Current" ~ '^\d+$'
+
+74. Valid Integer Amount for Accounts Receivable (A/R) Prior Year
+SELECT * FROM your_table_name WHERE "Accounts Receivable (A/R) Prior Year" IS NULL OR "Accounts Receivable (A/R) Prior Year" ~ '^\d+$'
+
+75. Valid Integer Amount for Inventory Current
+SELECT * FROM your_table_name WHERE "Inventory Current" IS NULL OR "Inventory Current" ~ '^\d+$'
+
+76. Valid Integer Amount for Inventory Prior Year
+SELECT * FROM your_table_name WHERE "Inventory Prior Year" IS NULL OR "Inventory Prior Year" ~ '^\d+$'
+
+77. Valid Integer Amount for Current Assets Current
+SELECT * FROM your_table_name WHERE "Current Assets Current" IS NULL OR "Current Assets Current" ~ '^\d+$'
+
+78. CurrentAssetsPriorYear Must be numeric
+SELECT * FROM your_table_name WHERE "CurrentAssetsPriorYear" IS NULL OR typeof("CurrentAssetsPriorYear") = 'integer' OR typeof("CurrentAssetsPriorYear") = 'real'
+
+79. CurrentAssetsPriorYear Must not be null
+SELECT * FROM your_table_name WHERE "CurrentAssetsPriorYear" IS NOT NULL
+
+80. TangibleAssets Must be numeric
+SELECT * FROM your_table_name WHERE "TangibleAssets" IS NULL OR typeof("TangibleAssets") = 'integer' OR typeof("TangibleAssets") = 'real'
+
+81. TangibleAssets Must not be null
+SELECT * FROM your_table_name WHERE "TangibleAssets" IS NOT NULL
+
+82. FixedAssets Must be numeric
+SELECT * FROM your_table_name WHERE "FixedAssets" IS NULL OR typeof("FixedAssets") = 'integer' OR typeof("FixedAssets") = 'real'
+
+83. FixedAssets Must not be null
+SELECT * FROM your_table_name WHERE "FixedAssets" IS NOT NULL
+
+84. TotalAssetsCurrent Must be numeric
+SELECT * FROM your_table_name WHERE "TotalAssetsCurrent" IS NULL OR typeof("TotalAssetsCurrent") = 'integer' OR typeof("TotalAssetsCurrent") = 'real'
+
+85. TotalAssetsCurrent Must not be null
+SELECT * FROM your_table_name WHERE "TotalAssetsCurrent" IS NOT NULL
+
+86. TotalAssetsPriorYear Must be numeric
+SELECT * FROM your_table_name WHERE "TotalAssetsPriorYear" IS NULL OR typeof("TotalAssetsPriorYear") = 'integer' OR typeof("TotalAssetsPriorYear") = 'real'
+
+87. TotalAssetsPriorYear Must not be null
+SELECT * FROM your_table_name WHERE "TotalAssetsPriorYear" IS NOT NULL
+
+88. AccountsPayableCurrent Must be numeric
+SELECT * FROM your_table_name WHERE "AccountsPayableCurrent" IS NULL OR typeof("AccountsPayableCurrent") = 'integer' OR typeof("AccountsPayableCurrent") = 'real'
+
+89. AccountsPayableCurrent Must not be null
+SELECT * FROM your_table_name WHERE "AccountsPayableCurrent" IS NOT NULL
+
+90. AccountsPayablePriorYear Must be numeric
+SELECT * FROM your_table_name WHERE "AccountsPayablePriorYear" IS NULL OR typeof("AccountsPayablePriorYear") = 'integer' OR typeof("AccountsPayablePriorYear") = 'real'
+
+91. AccountsPayablePriorYear Must not be null
+SELECT * FROM your_table_name WHERE "AccountsPayablePriorYear" IS NOT NULL
+
+92. ShortTermDebt Must be numeric
+SELECT * FROM your_table_name WHERE "ShortTermDebt" IS NULL OR typeof("ShortTermDebt") = 'integer' OR typeof("ShortTermDebt") = 'real'
+
+93. ShortTermDebt Must not be null
+SELECT * FROM your_table_name WHERE "ShortTermDebt" IS NOT NULL
+
+94. CurrentMaturitiesLongTermDebt Must be numeric
+SELECT * FROM your_table_name WHERE "CurrentMaturitiesLongTermDebt" IS NULL OR typeof("CurrentMaturitiesLongTermDebt") = 'integer' OR typeof("CurrentMaturitiesLongTermDebt") = 'real'
+
+95. CurrentMaturitiesLongTermDebt Must not be null
+SELECT * FROM your_table_name WHERE "CurrentMaturitiesLongTermDebt" IS NOT NULL
+
+96. CurrentLiabilitiesCurrent Must be numeric
+SELECT * FROM your_table_name WHERE "CurrentLiabilitiesCurrent" IS NULL OR typeof("CurrentLiabilitiesCurrent") = 'integer' OR typeof("CurrentLiabilitiesCurrent") = 'real'
+
+97. CurrentLiabilitiesCurrent Must not be null
+SELECT * FROM your_table_name WHERE "CurrentLiabilitiesCurrent" IS NOT NULL
+
+98. CurrentLiabilitiesPriorYear Must be numeric
+SELECT * FROM your_table_name WHERE "CurrentLiabilitiesPriorYear" IS NULL OR typeof("CurrentLiabilitiesPriorYear") = 'integer' OR typeof("CurrentLiabilitiesPriorYear") = 'real'
+
+99. CurrentLiabilitiesPriorYear Must not be null
+SELECT * FROM your_table_name WHERE "CurrentLiabilitiesPriorYear" IS NOT NULL
+
+100. LongTermDebt Must be numeric
+SELECT * FROM your_table_name WHERE "LongTermDebt" IS NULL OR typeof("LongTermDebt") = 'integer' OR typeof("LongTermDebt") = 'real'
+
+101. LongTermDebt Must not be null
+SELECT * FROM your_table_name WHERE "LongTermDebt" IS NOT NULL
+
+102. MinorityInterest Must be numeric or 'NA'
+SELECT * FROM your_table_name WHERE "MinorityInterest" IS NULL OR "MinorityInterest" = 'NA' OR typeof("MinorityInterest") = 'integer' OR typeof("MinorityInterest") = 'real'
+
+103. MinorityInterest Must not be null
+SELECT * FROM your_table_name WHERE "MinorityInterest" IS NOT NULL
+
+104. TotalLiabilities Must be numeric
+SELECT * FROM your_table_name WHERE "TotalLiabilities" IS NULL OR typeof("TotalLiabilities") = 'integer' OR typeof("TotalLiabilities") = 'real'
+
+105. TotalLiabilities Must not be null
+SELECT * FROM your_table_name WHERE "TotalLiabilities" IS NOT NULL
+
+106. RetainedEarnings Must be numeric
+SELECT * FROM your_table_name WHERE "RetainedEarnings" IS NULL OR typeof("RetainedEarnings") = 'integer' OR typeof("RetainedEarnings") = 'real'
+
+107. RetainedEarnings Must not be null
+SELECT * FROM your_table_name WHERE "RetainedEarnings" IS NOT NULL
+
+108. CapitalExpenditures Must be numeric
+SELECT * FROM your_table_name WHERE "CapitalExpenditures" IS NULL OR typeof("CapitalExpenditures") = 'integer' OR typeof("CapitalExpenditures") = 'real'
+
+109. CapitalExpenditures Must not be null
+SELECT * FROM your_table_name WHERE "CapitalExpenditures" IS NOT NULL
+
+110. SpecialPurposeEntityFlag Must be '1' or '2'
+SELECT * FROM your_table_name WHERE "SpecialPurposeEntityFlag" IS NULL OR "SpecialPurposeEntityFlag" IN ('1', '2')
+
+111. SpecialPurposeEntityFlag Must not be null
+SELECT * FROM your_table_name WHERE "SpecialPurposeEntityFlag" IS NOT NULL
+
+112. ASC32620 must be numeric.
+SELECT * FROM your_table_name WHERE CAST(ASC32620 AS DECIMAL) IS NOT NULL;
+
+113. ASC32620 must be greater than or equal to 0.
+SELECT * FROM your_table_name WHERE CAST(ASC32620 AS DECIMAL) >= 0;
+
+114. PCDNoncreditDiscount must be numeric or null.
+SELECT * FROM your_table_name WHERE PCDNoncreditDiscount IS NULL OR CAST(PCDNoncreditDiscount AS DECIMAL) IS NOT NULL;
+
+115. CurrentMaturityDate must be in YYYY-MM-DD format.
+SELECT * FROM your_table_name WHERE CurrentMaturityDate LIKE '____-__-__';
+
+116. CurrentMaturityDate must be one of the allowed values: ["9999-01-01"].
+SELECT * FROM your_table_name WHERE CurrentMaturityDate IN ('9999-01-01');
+
+117. CommittedExposureGlobalParValue must be numeric or string.
+SELECT * FROM your_table_name WHERE CommittedExposureGlobalParValue IS NOT NULL;
+
+118. CommittedExposureGlobalParValue must be one of the allowed values: ["NA"].
+SELECT * FROM your_table_name WHERE CommittedExposureGlobalParValue IN ('NA');
+
+119. UtilizedExposureGlobalParValue must be numeric or string.
+SELECT * FROM your_table_name WHERE UtilizedExposureGlobalParValue IS NOT NULL;
+
+120. UtilizedExposureGlobalParValue must be one of the allowed values: ["NA"].
+SELECT * FROM your_table_name WHERE UtilizedExposureGlobalParValue IN ('NA');
+
+121. CommittedExposureGlobalFairValue must be numeric or string.
+SELECT * FROM your_table_name WHERE CommittedExposureGlobalFairValue IS NOT NULL;
+
+122. CommittedExposureGlobalFairValue must be one of the allowed values: ["NA"].
+SELECT * FROM your_table_name WHERE CommittedExposureGlobalFairValue IN ('NA');
+
+123. Utilized Exposure Global Fair Value must be numeric or 'NA'.
+SELECT * FROM your_table_name WHERE `Utilized Exposure Global Fair Value` = 'NA' OR CAST(`Utilized Exposure Global Fair Value` AS DECIMAL) IS NOT NULL;
+
+124. Utilized Exposure Global Fair Value, if numeric, must be greater than or equal to 0.
+SELECT * FROM your_table_name WHERE `Utilized Exposure Global Fair Value` = 'NA' OR CAST(`Utilized Exposure Global Fair Value` AS DECIMAL) >= 0;
+
+125. Utilized Exposure Global Fair Value, if numeric, must have no commas, dollar signs, or decimals.
+SELECT * FROM your_table_name WHERE `Utilized Exposure Global Fair Value` = 'NA' OR `Utilized Exposure Global Fair Value` NOT LIKE '%,%' AND `Utilized Exposure Global Fair Value` NOT LIKE '%$.%' AND `Utilized Exposure Global Fair Value` NOT LIKE '%.%';
+
+126. Obligor LEI must have a length of 20 or be 'NA'.
+SELECT * FROM your_table_name WHERE LENGTH(`Obligor LEI`) = 20 OR `Obligor LEI` = 'NA';
+
+127. Obligor LEI must be alphanumeric or 'NA'.
+SELECT * FROM your_table_name WHERE (`Obligor LEI` = 'NA' OR `Obligor LEI` NOT LIKE '%[^a-zA-Z0-9]%');
+
+128. Primary Source of Repayment LEI must have a length of 20 or be 'NA'.
+SELECT * FROM your_table_name WHERE LENGTH(`Primary Source of Repayment LEI`) = 20 OR `Primary Source of Repayment LEI` = 'NA';
+
+129. Primary Source of Repayment LEI must be alphanumeric or 'NA'.
+SELECT * FROM your_table_name WHERE (`Primary Source of Repayment LEI` = 'NA' OR `Primary Source of Repayment LEI` NOT LIKE '%[^a-zA-Z0-9]%');
+
+130. Primary Source of Repayment LEI cannot be empty if Obligor LEI is not 'NA'.
+SELECT * FROM your_table_name WHERE NOT (`Obligor LEI` != 'NA' AND `Primary Source of Repayment LEI` IS NULL);
+

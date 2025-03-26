@@ -95,3 +95,5 @@ def generate_rules():
 def model():
     generate_rules()
     generate_sql_from_rules()
+
+# model()

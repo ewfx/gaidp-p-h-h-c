@@ -65,7 +65,7 @@ Our Tech Innovation
     ```
 4. **Launch the App:**
     ```bash
-    streamlit run app.py
+    streamlit run code/src/app.py
     ```
 5. **Upload Files:**
     - Regulatory instructions (PDF or text)
